@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio - Hanief Kasmiranda</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* BASE THEME (Default: Hitam-Biru) */
+        :root {
+            --bg-color: #0d0d13;
+            --card-bg: rgba(22, 22, 34, 0.75);
+            --text-color: #ffffff;
+            --text-muted: #a0aec0;
+            --primary-color: #3b82f6; /* Biru */
+            --primary-hover: #1d4ed8;
+            --border-color: rgba(45, 55, 72, 0.6);
+        }
+
+        /* THEME HITAM-HIJAU */
+        [data-theme="hitam-hijau"] {
+            --bg-color: #0b0f0b;
+            --card-bg: rgba(20, 28, 20, 0.85);
+            --text-color: #ffffff;
+            --text-muted: #a3b899;
+            --primary-color: #22c55e; /* Hijau */
+            --primary-hover: #16a34a;
+            --border-color: rgba(39, 55, 39, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+            padding-top: 80px;
+            padding-bottom: 40px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* FIXED BACKGROUND DISPLAY (Latar Pemandangan) */
+        .global-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* FIXED LAYER UNTUK MATRIX, RETAKAN KACA & PENGUIN */
+        .fixed-hacker-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        [data-theme="hitam-hijau"] .fixed-hacker-layer {
+            opacity: 1;
+        }
+
+        #matrixCanvasFixed, #glassCrackCanvasFixed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* PENGUIN LINUX (TUX) PEEKING */
+        .tux-container {
+            position: fixed;
+            bottom: 60px;
+            right: 0px; 
+            width: 100px;
+            height: 100px;
+            z-index: 999;
+            pointer-events: none;
+            transform: translateX(100%); 
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        [data-theme="hitam-hijau"] .tux-container.peek {
+            transform: translateX(65%); 
+        }
+
+        .tux-eye {
+            transform-origin: center;
+            animation: blink 2.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        /* ANIMASI SCROLL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* BAR ATAS / NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background-color: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .digital-clock {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            background: rgba(0,0,0,0.4);
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* FLOATING THEME BUTTON (KIRI BAWAH) */
+        .theme-btn-floating {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: 0.2s;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-btn-floating:hover {
+            background: var(--primary-hover);
+            transform: scale(1.1);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-item {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            text-decoration: none;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-color);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .nav-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #000;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.2s;
+        }
+        .nav-item:hover::after {
+            opacity: 1;
+        }
+
+        /* CONTAINER UTAMA */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+            border-radius: 16px;
+            background: transparent;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nature-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        [data-theme="hitam-hijau"] .nature-bg {
+            opacity: 0;
+        }
+
+        /* Awan Melintas */
+        .cloud {
+            position: absolute;
+            fill: rgba(255, 255, 255, 0.22);
+            animation: moveClouds linear infinite;
+        }
+        
+        .cloud-1 { top: 6%; width: 130px; animation-duration: 26s; }
+        .cloud-2 { top: 18%; width: 170px; animation-duration: 38s; animation-delay: -12s; }
+        .cloud-3 { top: 10%; width: 100px; animation-duration: 22s; animation-delay: -5s; }
+        .cloud-4 { top: 25%; width: 210px; animation-duration: 46s; animation-delay: -22s; }
+        .cloud-5 { top: 14%; width: 150px; animation-duration: 32s; animation-delay: -15s; }
+        .cloud-6 { top: 8%; width: 120px; animation-duration: 24s; animation-delay: -8s; }
+
+        @keyframes moveClouds {
+            0% { transform: translateX(-250px); }
+            100% { transform: translateX(calc(100vw + 250px)); }
+        }
+
+        /* Burung Terbang */
+        .bird {
+            position: absolute;
+            width: 18px;
+            height: 12px;
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.6);
+            stroke-width: 2;
+            animation: flyBird linear infinite;
+        }
+        .bird-1 { top: 12%; animation-duration: 16s; }
+        .bird-2 { top: 22%; animation-duration: 12s; animation-delay: -5s; }
+        .bird-3 { top: 8%; animation-duration: 20s; animation-delay: -10s; }
+
+        @keyframes flyBird {
+            0% { transform: translate(-50px, 0px) scale(0.8); }
+            50% { transform: translate(50vw, -20px) scale(1); }
+            100% { transform: translate(calc(100vw + 50px), 10px) scale(0.8); }
+        }
+
+        .profile-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 15px auto;
+            border-radius: 50%;
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+            transition: box-shadow 0.3s;
+        }
+
+        [data-theme="hitam-hijau"] .profile-wrapper {
+            box-shadow: 0 0 25px rgba(34, 197, 94, 0.5);
+        }
+
+        #profile-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--primary-color);
+            background-color: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(4px);
+        }
+        .profile-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--text-muted);
+        }
+        .hero h1 {
+            font-size: 2.3rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+        }
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+        }
+        
+        .contact-info-bar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 1.3rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            padding: 10px 24px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+        .contact-info-bar a {
+            text-decoration: none;
+            transition: transform 0.2s;
+            display: inline-flex;
+            align-items: center;
+        }
+        .contact-info-bar a:hover {
+            transform: scale(1.2);
+        }
+        .contact-info-bar .linkedin-btn-icon { color: #0077b5; }
+        .contact-info-bar .whatsapp-btn-icon { color: #25d366; }
+        .contact-info-bar .instagram-btn-icon { color: #e1306c; }
+
+        /* KARTU SECTION */
+        .section-card {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        ul { list-style-type: none; }
+        li {
+            margin-bottom: 8px;
+            color: var(--text-color);
+            position: relative;
+            padding-left: 15px;
+        }
+        li::before {
+            content: "•";
+            color: var(--primary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .school-link, .gdrive-link, .org-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .school-link:hover, .gdrive-link:hover, .org-link:hover {
+            color: var(--primary-color);
+        }
+
+        .display-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .display-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .item-title {
+            font-weight: bold;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+        .item-date {
+            font-size: 0.85rem;
+            color: var(--primary-color);
+            margin: 2px 0 6px 0;
+        }
+        .item-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        /* GRID SERTIFIKAT & FOTO KEGIATAN (3 Kolom x 2 Baris) */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .grid-item-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .grid-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            aspect-ratio: 4 / 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            text-align: center;
+            color: var(--text-muted);
+            transition: border-color 0.3s, transform 0.2s;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .grid-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .grid-card i {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .grid-card span {
+            font-size: 0.8rem;
+            line-height: 1.2;
+        }
+
+        /* Gambar di dalam Kotak */
+        .grid-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        /* Teks Keterangan di Bawah Gambar (RATA KANAN-KIRI / JUSTIFY) */
+        .grid-text-wrapper {
+            display: flex;
+            flex-direction: column;
+            text-align: justify;
+            text-justify: inter-word;
+            line-height: 1.35;
+        }
+
+        .grid-caption-title {
+            font-size: 0.85rem;
+            font-weight: bold; /* Bold untuk judul */
+            color: var(--text-color);
+            display: block;
+        }
+
+        .grid-caption-date {
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* FOOTER COPYRIGHT */
+        .footer {
+            text-align: center;
+            padding: 20px 0 10px 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 600px) {
+            .photo-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- GLOBAL LATAR BELAKANG -->
+    <div class="global-bg-container">
+        <div class="nature-bg">
+            <svg viewBox="0 0 1000 600" preserveAspectRatio="xMidYMin slice" style="width:100vw; height:100vh;">
+                <defs>
+                    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#050a18" />
+                        <stop offset="40%" stop-color="#121e3d" />
+                        <stop offset="80%" stop-color="#1a2b56" />
+                        <stop offset="100%" stop-color="#0d0d13" />
+                    </linearGradient>
+                    <linearGradient id="mountainGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#2a3c66" />
+                        <stop offset="100%" stop-color="#101728" />
+                    </linearGradient>
+                    <linearGradient id="mountainGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#182545" />
+                        <stop offset="100%" stop-color="#0b0f19" />
+                    </linearGradient>
+                    <filter id="moonGlow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="6" result="blur" />
+                        <feMerge>
+                            <feMergeNode in="blur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                
+                <rect width="1000" height="600" fill="url(#skyGrad)" />
+
+                <!-- Bulan Sabit Glowing -->
+                <g transform="translate(800, 90)">
+                    <circle cx="0" cy="0" r="32" fill="#fffdec" filter="url(#moonGlow)" opacity="0.9" />
+                    <circle cx="-12" cy="-8" r="28" fill="#0c1731" />
+                </g>
+                
+                <!-- Gunung -->
+                <path d="M -100,450 L 100,220 L 300,380 L 550,180 L 800,400 L 1100,200 L 1100,600 L -100,600 Z" fill="url(#mountainGrad1)" opacity="0.8"/>
+                <path d="M -50,500 L 220,310 L 450,460 L 720,280 L 1050,480 L 1050,600 L -50,600 Z" fill="url(#mountainGrad2)" />
+                
+                <!-- Siluet Pohon -->
+                <path d="M 30,550 L 45,500 L 38,500 L 50,460 L 43,460 L 55,420 L 67,460 L 60,460 L 72,500 L 65,500 L 80,550 Z" fill="#09101c" />
+                <path d="M 850,560 L 865,510 L 858,510 L 870,470 L 863,470 L 875,430 L 887,470 L 880,470 L 892,510 L 885,510 L 900,560 Z" fill="#09101c" />
+                <path d="M 920,570 L 932,525 L 926,525 L 936,490 L 930,490 L 940,450 L 950,490 L 944,490 L 954,525 L 948,525 L 960,570 Z" fill="#060a12" />
+            </svg>
+
+            <!-- Awan -->
+            <svg class="cloud cloud-1" viewBox="0 0 100 60"><path d="M10,40 Q20,20 40,25 Q55,10 70,25 Q85,20 90,40 Q95,50 80,50 L20,50 Q5,50 10,40 Z"/></svg>
+            <svg class="cloud cloud-2" viewBox="0 0 100 60"><path d="M10,40 Q20,20 40,25 Q55,10 70,25 Q85,20 90,40 Q95,50 80,50 L20,50 Q5,50 10,40 Z"/></svg>
+            <svg class="cloud cloud-3" viewBox="0 0 100 60"><path d="M10,40 Q20,20 40,25 Q55,10 70,25 Q85,20 90,40 Q95,50 80,50 L20,50 Q5,50 10,40 Z"/></svg>
+            <svg class="cloud cloud-4" viewBox="0 0 100 60"><path d="M10,40 Q20,20 40,25 Q55,10 70,25 Q85,20 90,40 Q95,50 80,50 L20,50 Q5,50 10,40 Z"/></svg>
+            <svg class="cloud cloud-5" viewBox="0 0 100 60"><path d="M10,40 Q20,20 40,25 Q55,10 70,25 Q85,20 90,40 Q95,50 80,50 L20,50 Q5,50 10,40 Z"/></svg>
+            <svg class="cloud cloud-6" viewBox="0 0 100 60"><path d="M10,40 Q20,20 40,25 Q55,10 70,25 Q85,20 90,40 Q95,50 80,50 L20,50 Q5,50 10,40 Z"/></svg>
+
+            <!-- Burung -->
+            <svg class="bird bird-1" viewBox="0 0 50 30"><path d="M0,15 Q12,0 25,15 Q38,0 50,15"><animate attributeName="d" values="M0,15 Q12,0 25,15 Q38,0 50,15; M0,15 Q12,25 25,15 Q38,25 50,15; M0,15 Q12,0 25,15 Q38,0 50,15" dur="0.8s" repeatCount="indefinite" /></path></svg>
+            <svg class="bird bird-2" viewBox="0 0 50 30"><path d="M0,15 Q12,0 25,15 Q38,0 50,15"><animate attributeName="d" values="M0,15 Q12,0 25,15 Q38,0 50,15; M0,15 Q12,25 25,15 Q38,25 50,15; M0,15 Q12,0 25,15 Q38,0 50,15" dur="0.7s" repeatCount="indefinite" /></path></svg>
+            <svg class="bird bird-3" viewBox="0 0 50 30"><path d="M0,15 Q12,0 25,15 Q38,0 50,15"><animate attributeName="d" values="M0,15 Q12,0 25,15 Q38,0 50,15; M0,15 Q12,25 25,15 Q38,25 50,15; M0,15 Q12,0 25,15 Q38,0 50,15" dur="0.9s" repeatCount="indefinite" /></path></svg>
+        </div>
+    </div>
+
+    <!-- FIXED HACKER LAYER (Khusus Mode Hijau) -->
+    <div class="fixed-hacker-layer">
+        <canvas id="matrixCanvasFixed"></canvas>
+        <canvas id="glassCrackCanvasFixed"></canvas>
+        
+        <!-- PENGUIN LINUX (TUX) -->
+        <div class="tux-container" id="tuxPenguin">
+            <svg viewBox="0 0 100 100" style="width: 100%; height: 100%; filter: drop-shadow(-3px 0 10px rgba(34, 197, 94, 0.8));">
+                <ellipse cx="50" cy="50" rx="42" ry="42" fill="#111111" />
+                <ellipse cx="40" cy="50" rx="30" ry="32" fill="#ffffff" />
+                
+                <g class="tux-eye">
+                    <ellipse cx="28" cy="38" rx="7" ry="10" fill="#ffffff" />
+                    <circle cx="24" cy="39" r="3.5" fill="#000000" />
+                </g>
+                <g class="tux-eye">
+                    <ellipse cx="46" cy="38" rx="7" ry="10" fill="#ffffff" />
+                    <circle cx="42" cy="39" r="3.5" fill="#000000" />
+                </g>
+                
+                <polygon points="20,48 44,48 28,62" fill="#f59e0b" />
+            </svg>
+        </div>
+    </div>
+
+    <!-- Tombol Mode Bulat (Kiri Bawah) -->
+    <button class="theme-btn-floating" id="themeToggle" onclick="toggleTheme()" title="Ubah Mode Tema">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+    </button>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="digital-clock" id="clock">00:00:00</div>
+        </div>
+        <div class="nav-menu">
+            <a href="#pendidikan" class="nav-item" data-tooltip="Pendidikan"><i class="fa-solid fa-graduation-cap"></i></a>
+            <a href="#keahlian-teknis" class="nav-item" data-tooltip="Keahlian Teknis"><i class="fa-solid fa-laptop-code"></i></a>
+            <a href="#non-teknis" class="nav-item" data-tooltip="Non-Teknis"><i class="fa-solid fa-user-gear"></i></a>
+            <a href="#organisasi" class="nav-item" data-tooltip="Organisasi"><i class="fa-solid fa-sitemap"></i></a>
+            <a href="#sertifikat" class="nav-item" data-tooltip="Sertifikat"><i class="fa-solid fa-certificate"></i></a>
+            <a href="#foto-kegiatan" class="nav-item" data-tooltip="Foto Kegiatan"><i class="fa-solid fa-images"></i></a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <header class="hero reveal">
+            <div class="hero-content">
+                <div class="profile-wrapper">
+                    <div id="profile-container">
+                        <div class="profile-placeholder" id="avatar-placeholder"><i class="fa-solid fa-user"></i></div>
+                    </div>
+                </div>
+                <h1>HANIEF KASMIRANDA</h1>
+                <p style="margin-bottom: 20px;">Siswa SMK - Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</p>
+                
+                <div class="contact-info-bar">
+                    <a href="https://www.linkedin.com/in/hanief-kasmiranda-12410h/" target="_blank" title="LinkedIn">
+                        <i class="fa-brands fa-linkedin linkedin-btn-icon"></i>
+                    </a>
+                    <span>|</span>
+                    <a href="https://wa.me/6283143372382" target="_blank" title="WhatsApp">
+                        <i class="fa-brands fa-whatsapp whatsapp-btn-icon"></i>
+                    </a>
+                    <span>|</span>
+                    <a href="https://www.instagram.com/_nieapz.04/" target="_blank" title="Instagram">
+                        <i class="fa-brands fa-instagram instagram-btn-icon"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tentang Saya -->
+        <section class="section-card reveal">
+            <h2 class="section-title"><i class="fa-solid fa-user"></i> Tentang Saya</h2>
+            <p id="about-text" style="line-height: 1.6; color: var(--text-muted); text-align: justify;">
+                Siswa SMK jurusan TJKT yang disiplin, bertanggung jawab, dan memiliki dasar kuat di bidang jaringan komputer. Terbiasa bekerja dalam tim dan memiliki mentalitas yang teruji melalui organisasi kepemimpinan dan kemanusiaan. Siap mengaplikasikan kemampuan teknis dan adaptasi cepat dalam program Praktek Kerja Lapangan (PKL).
+            </p>
+        </section>
+
+        <!-- Pendidikan -->
+        <section class="section-card reveal" id="pendidikan">
+            <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i> Pendidikan</h2>
+            <div id="list-pendidikan">
+                <div class="display-item">
+                    <a href="https://www.instagram.com/smkwikrama/" target="_blank" class="school-link">
+                        <strong>SMK WIKRAMA BOGOR</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <div class="item-date">2024 - Sekarang • Pelajar</div>
+                    <ul>
+                        <li>Jurusan: Teknik Jaringan Komputer dan Telekomunikasi (TJKT)</li>
+                    </ul>
+                </div>
+                <div class="display-item">
+                    <a href="https://www.instagram.com/smpityaspida/" target="_blank" class="school-link">
+                        <strong>SMP IT YASPIDA</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <div class="item-date">2021 – 2024</div>
+                    <ul>
+                        <li>Unggulan Seni</li>
+                    </ul>
+                </div>
+                <div class="display-item">
+                    <a href="https://www.instagram.com/sdnharjasari1/" target="_blank" class="school-link">
+                        <strong>SDN Harjasari 1</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <div class="item-date">2015 – 2021</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Keahlian Teknis -->
+        <section class="section-card reveal" id="keahlian-teknis">
+            <h2 class="section-title"><i class="fa-solid fa-laptop-code"></i> Keahlian Teknis (Hard Skills)</h2>
+            <div id="list-keahlian">
+                <div class="display-item">
+                    <a href="https://drive.google.com/drive/folders/1F5GRWd-cuhTCcqo58MEmvrYA-V30Mwlh" target="_blank" class="gdrive-link">
+                        <strong class="item-title">Cisco Packet Tracer</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <div class="item-desc">Konfigurasi dan simulasi dasar jaringan komputer.</div>
+                </div>
+                <div class="display-item">
+                    <a href="https://drive.google.com/drive/folders/1GcGetlgXovILg1iatriSfvrY1M52jyrP" target="_blank" class="gdrive-link">
+                        <strong class="item-title">MikroTik & Winbox</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <div class="item-desc">Konfigurasi dasar Routerboard, manajemen jaringan, dan manajemen Wi-Fi.</div>
+                </div>
+                <div class="display-item">
+                    <a href="https://drive.google.com/drive/folders/1MUbdQAp9tx2i7FWc2xQm0ipKcsLh9Ioo" target="_blank" class="gdrive-link">
+                        <strong class="item-title">Debian Server</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <div class="item-desc">Instalasi dan konfigurasi dasar layanan jaringan (DHCP, DNS, dan Web Server).</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Keahlian Non-Teknis -->
+        <section class="section-card reveal" id="non-teknis">
+            <h2 class="section-title"><i class="fa-solid fa-user-gear"></i> Keahlian Non-Teknis (Soft Skills)</h2> 
+            <p id="softskills-text" style="color: var(--text-muted); font-weight: 500; letter-spacing: 0.5px;">
+                Kedisiplinan & Ketepatan Waktu  |  Kerja Sama Tim (Teamwork)  |  Adaptasi Cepat  |  Komunikasi Efektif
+            </p>
+        </section>
+
+        <!-- Pengalaman Organisasi -->
+        <section class="section-card reveal" id="organisasi">
+            <h2 class="section-title"><i class="fa-solid fa-sitemap"></i> Pengalaman Organisasi</h2>
+            <div id="list-organisasi">
+                <div class="display-item">
+                    <a href="https://www.instagram.com/protokol0917/" target="_blank" class="org-link">
+                        <strong>Protokol Cabang — Anggota</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <ul>
+                        <li>Melatih kedisiplinan tinggi, manajemen waktu, dan koordinasi kerja dalam tim.</li>
+                        <li>Pencapaian: Berpartisipasi aktif sebagai petugas pada Upacara 17 Agustus Tingkat Kota</li>
+                    </ul>
+                </div>
+                <div class="display-item">
+                    <a href="https://www.instagram.com/prawikram/" target="_blank" class="org-link">
+                        <strong>Dewan Ambalan Pramuka — Pengurus</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <ul>
+                        <li>Mengasah jiwa kepemimpinan, kemampuan komunikasi, serta pemecahan masalah (problem solving).</li>
+                    </ul>
+                </div>
+                <div class="display-item">
+                    <a href="https://www.instagram.com/pmrsmkwikramabogor/" target="_blank" class="org-link">
+                        <strong>Palang Merah Remaja (PMR) — Anggota</strong> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.75rem;"></i>
+                    </a>
+                    <ul>
+                        <li>Mengembangkan empati, kesigapan bertindak dalam situasi darurat, dan kepedulian sosial.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sertifikat (Grid 3 Kolom x 2 Baris) -->
+        <section class="section-card reveal" id="sertifikat">
+            <h2 class="section-title"><i class="fa-solid fa-certificate"></i> Sertifikat</h2>
+            <div class="photo-grid">
+                <!-- Baris 1 -->
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-file-image"></i>
+                        <span>Sertifikat 1</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Sertifikat 1</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-file-image"></i>
+                        <span>Sertifikat 2</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Sertifikat 2</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-file-image"></i>
+                        <span>Sertifikat 3</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Sertifikat 3</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <!-- Baris 2 -->
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-file-image"></i>
+                        <span>Sertifikat 4</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Sertifikat 4</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-file-image"></i>
+                        <span>Sertifikat 5</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Sertifikat 5</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-file-image"></i>
+                        <span>Sertifikat 6</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Sertifikat 6</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Foto Kegiatan (Grid 3 Kolom x 2 Baris) -->
+        <section class="section-card reveal" id="foto-kegiatan">
+            <h2 class="section-title"><i class="fa-solid fa-images"></i> Foto Kegiatan</h2>
+            <div class="photo-grid">
+                <!-- Baris 1 -->
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-image"></i>
+                        <span>Foto Kegiatan 1</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Kegiatan 1</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-image"></i>
+                        <span>Foto Kegiatan 2</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Kegiatan 2</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-image"></i>
+                        <span>Foto Kegiatan 3</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Kegiatan 3</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <!-- Baris 2 -->
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-image"></i>
+                        <span>Foto Kegiatan 4</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Kegiatan 4</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-image"></i>
+                        <span>Foto Kegiatan 5</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Kegiatan 5</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+                <div class="grid-item-container">
+                    <div class="grid-card">
+                        <i class="fa-regular fa-image"></i>
+                        <span>Foto Kegiatan 6</span>
+                    </div>
+                    <div class="grid-text-wrapper">
+                        <span class="grid-caption-title">Judul Kegiatan 6</span>
+                        <span class="grid-caption-date">Bulan / Tahun</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER COPYRIGHT -->
+        <footer class="footer">
+            <p>H@n1ef.belajar</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // 1. JAM DIGITAL
+        function updateClock() {
+            const now = new Date();
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+            let seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 2. TOGGLE WARNA
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'hitam-hijau') {
+                document.documentElement.removeAttribute('data-theme');
+                stopHackerEffects();
+            } else {
+                document.documentElement.setAttribute('data-theme', 'hitam-hijau');
+                startHackerEffects();
+            }
+        }
+
+        // 3. ANIMASI SCROLL
+        function revealSections() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveal.getBoundingClientRect().top;
+                const elementBottom = reveal.getBoundingClientRect().bottom;
+                
+                if (elementTop < windowHeight - 50 && elementBottom > 50) {
+                    reveal.classList.add('active');
+                } else {
+                    reveal.classList.remove('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealSections);
+        window.addEventListener('load', revealSections);
+
+        // 4. MATRIX CODE, SHOCK GLASS CRACK & PENGUIN LINUX
+        let matrixInterval = null;
+        let crackTimeoutSequence = null;
+        let crackRenderInterval = null;
+        let penguinInterval = null;
+
+        const mCanvas = document.getElementById('matrixCanvasFixed');
+        const mCtx = mCanvas.getContext('2d');
+        const gCanvas = document.getElementById('glassCrackCanvasFixed');
+        const gCtx = gCanvas.getContext('2d');
+        const tuxElement = document.getElementById('tuxPenguin');
+
+        function resizeFixedCanvases() {
+            mCanvas.width = window.innerWidth;
+            mCanvas.height = window.innerHeight;
+            gCanvas.width = window.innerWidth;
+            gCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', () => {
+            resizeFixedCanvases();
+            if(document.documentElement.getAttribute('data-theme') === 'hitam-hijau') {
+                initMatrixDrops();
+            }
+        });
+
+        // Matrix Rain
+        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>/\\';
+        let fontSize = 15;
+        let drops = [];
+
+        function initMatrixDrops() {
+            resizeFixedCanvases();
+            let columns = Math.floor(mCanvas.width / fontSize);
+            drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.floor(Math.random() * -30);
+            }
+        }
+
+        function drawMatrix() {
+            mCtx.fillStyle = 'rgba(11, 15, 11, 0.18)';
+            mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+
+            mCtx.fillStyle = '#22c55e';
+            mCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+
+                mCtx.fillText(text, x, y);
+
+                if (y > mCanvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        // GLASS CRACK SYSTEM
+        let activeCrack = null;
+        let isNextCrackRight = true;
+
+        function triggerShockCrack() {
+            let x;
+            if (isNextCrackRight) {
+                x = gCanvas.width * 0.7 + Math.random() * (gCanvas.width * 0.2); 
+            } else {
+                x = gCanvas.width * 0.1 + Math.random() * (gCanvas.width * 0.2); 
+            }
+            isNextCrackRight = !isNextCrackRight;
+
+            const y = gCanvas.height * 0.2 + Math.random() * (gCanvas.height * 0.6);
+
+            activeCrack = {
+                x: x,
+                y: y,
+                radius: 65 + Math.random() * 35,
+                numSpokes: 6 + Math.floor(Math.random() * 4),
+                opacity: 1.0,
+                flash: 1.0, 
+                state: 'holding', 
+                holdStartTime: Date.now()
+            };
+
+            crackTimeoutSequence = setTimeout(triggerShockCrack, 7000);
+        }
+
+        function renderCracks() {
+            gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+
+            if (!activeCrack) return;
+
+            const c = activeCrack;
+            const now = Date.now();
+
+            if (c.state === 'holding') {
+                if (now - c.holdStartTime > 3000) {
+                    c.state = 'fading';
+                }
+            } else if (c.state === 'fading') {
+                c.opacity -= 0.04; 
+                if (c.opacity <= 0) {
+                    activeCrack = null;
+                    return;
+                }
+            }
+
+            gCtx.save();
+
+            if (c.flash > 0) {
+                gCtx.fillStyle = `rgba(34, 197, 94, ${c.flash * 0.3})`;
+                gCtx.beginPath();
+                gCtx.arc(c.x, c.y, c.radius * 1.5, 0, Math.PI * 2);
+                gCtx.fill();
+                c.flash -= 0.15; 
+            }
+
+            gCtx.strokeStyle = `rgba(255, 255, 255, ${c.opacity})`;
+            gCtx.lineWidth = 2.2;
+            gCtx.shadowColor = '#22c55e';
+            gCtx.shadowBlur = 12;
+
+            gCtx.beginPath();
+            gCtx.arc(c.x, c.y, 4, 0, Math.PI * 2);
+            gCtx.fillStyle = `rgba(255, 255, 255, ${c.opacity})`;
+            gCtx.fill();
+
+            for (let j = 0; j < c.numSpokes; j++) {
+                const angle = (Math.PI * 2 / c.numSpokes) * j;
+                let currX = c.x;
+                let currY = c.y;
+
+                gCtx.beginPath();
+                gCtx.moveTo(currX, currY);
+
+                const steps = 4;
+                for (let s = 0; s < steps; s++) {
+                    const segLen = (c.radius / steps);
+                    currX += Math.cos(angle + (Math.random() * 0.35 - 0.175)) * segLen;
+                    currY += Math.sin(angle + (Math.random() * 0.35 - 0.175)) * segLen;
+                    gCtx.lineTo(currX, currY);
+                }
+                gCtx.stroke();
+            }
+
+            gCtx.restore();
+        }
+
+        // PENGUIN ANIMATION
+        function triggerPenguinPeek() {
+            tuxElement.classList.add('peek');
+
+            setTimeout(() => {
+                tuxElement.classList.remove('peek');
+            }, 2000);
+        }
+
+        function startHackerEffects() {
+            initMatrixDrops();
+            activeCrack = null;
+            
+            if(!matrixInterval) {
+                matrixInterval = setInterval(drawMatrix, 40);
+            }
+            
+            if(!crackRenderInterval) {
+                crackRenderInterval = setInterval(renderCracks, 30);
+            }
+
+            if(crackTimeoutSequence) clearTimeout(crackTimeoutSequence);
+            crackTimeoutSequence = setTimeout(triggerShockCrack, 1000);
+
+            triggerPenguinPeek();
+            
+            if(!penguinInterval) {
+                penguinInterval = setInterval(triggerPenguinPeek, 11000);
+            }
+        }
+
+        function stopHackerEffects() {
+            if(matrixInterval) { clearInterval(matrixInterval); matrixInterval = null; }
+            if(crackTimeoutSequence) { clearTimeout(crackTimeoutSequence); crackTimeoutSequence = null; }
+            if(crackRenderInterval) { clearInterval(crackRenderInterval); crackRenderInterval = null; }
+            if(penguinInterval) { clearInterval(penguinInterval); penguinInterval = null; }
+            
+            mCtx.clearRect(0, 0, mCanvas.width, mCanvas.height);
+            gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+            tuxElement.classList.remove('peek');
+            activeCrack = null;
+        }
+    </script>
+</body>
+</html>
